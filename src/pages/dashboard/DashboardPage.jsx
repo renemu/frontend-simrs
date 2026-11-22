@@ -43,7 +43,6 @@ export default function DashboardPage() {
   const [fromDate, setFromDate] = useState(() => getLocalFirstOfMonthDate());
   const [toDate, setToDate] = useState(() => getLocalTodayDate());
   const [metrics, setMetrics] = useState(null);
-  const [source, setSource] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -56,7 +55,6 @@ export default function DashboardPage() {
         to: toDate,
       });
       setMetrics(res?.data || null);
-      setSource(res?.via || "");
     } catch (err) {
       setError(err?.message || "Gagal memuat ringkasan dashboard.");
     } finally {
@@ -85,11 +83,6 @@ export default function DashboardPage() {
               <ShieldCheck className="h-3.5 w-3.5" />
               {user?.role?.display_name || user?.role?.name || "User"}
             </Badge>
-            {/* {source && (
-              <Badge variant="outline" className="text-[11px]">
-                {source === "node-service" ? "Node.js Analytics API" : "Yii2 Metrics API"}
-              </Badge>
-            )} */}
           </div>
           <h1 className="text-2xl font-bold tracking-tight">
             Dashboard Pelayanan Rawat Jalan

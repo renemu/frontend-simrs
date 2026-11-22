@@ -80,10 +80,7 @@ export default function ActivityLogsPage() {
             Log Aktivitas &amp; Audit Trail
           </h1>
           <p className="text-sm text-muted-foreground">
-            Rekaman aktivitas autentikasi dan perubahan hak akses yang bersifat
-            read-only (
-            <code className="font-mono text-xs">GET /api/user-logs</code> —
-            Module Code: <code className="font-mono text-xs">users-logs</code>)
+            Rekaman aktivitas autentikasi dan perubahan data sistem
           </p>
         </div>
 
@@ -157,7 +154,7 @@ export default function ActivityLogsPage() {
                   <TableCell colSpan={6} className="h-32 text-center">
                     <div className="inline-flex items-center gap-2 text-muted-foreground">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Memuat log aktivitas dari Backend Yii2...
+                      Memuat log aktivitas...
                     </div>
                   </TableCell>
                 </TableRow>

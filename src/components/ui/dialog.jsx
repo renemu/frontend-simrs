@@ -30,7 +30,7 @@ export function DialogContent({ className, onClose, children }) {
   return (
     <div
       className={cn(
-        "relative w-full rounded-xl border bg-card p-6 text-card-foreground shadow-xl",
+        "relative w-full max-h-[90dvh] overflow-y-auto rounded-xl border bg-card p-5 sm:p-6 text-card-foreground shadow-xl",
         className
       )}
     >

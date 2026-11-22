@@ -153,7 +153,7 @@ export default function PrescriptionsPage() {
   const handleDispense = async (rx) => {
     if (
       !window.confirm(
-        `Proses & serahkan obat untuk resep ${rx.prescription_number} (${rx.patient?.full_name})? Stok obat akan dikurangi secara atomik.`
+        `Proses & serahkan obat untuk resep ${rx.prescription_number} (${rx.patient?.full_name})? Stok obat akan dikurangi otomatis.`
       )
     ) {
       return;
@@ -200,7 +200,7 @@ export default function PrescriptionsPage() {
             Resep &amp; Pelayanan Farmasi
           </h1>
           <p className="text-sm text-muted-foreground">
-            Validasi stok real-time, penyerahan obat atomik, dan audit trail pergerakan stok
+            Validasi stok obat, penyerahan resep farmasi, dan riwayat pergerakan stok
           </p>
         </div>
         <div className="flex items-center gap-2">

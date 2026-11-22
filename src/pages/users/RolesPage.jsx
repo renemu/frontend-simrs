@@ -275,21 +275,18 @@ export default function RolesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Roles & Module Permissions
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            Roles &amp; Module Permissions
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Atur role pengguna dan matriks hak akses CRUD untuk setiap{" "}
-            <code className="font-mono text-xs">module_code</code> (
-            <code className="font-mono text-xs">/api/roles</code> — Module Code:{" "}
-            <code className="font-mono text-xs">users-roles</code>)
+          <p className="text-sm text-muted-foreground break-words">
+            Atur role pengguna dan matriks hak akses CRUD untuk setiap modul.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Button variant="outline" size="sm" onClick={loadData}>
             <RefreshCw className="h-4 w-4" />
             Refresh
@@ -316,16 +313,16 @@ export default function RolesPage() {
         </Alert>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-12">
         {/* Left 4 Cols: Roles List */}
-        <Card className="lg:col-span-4">
-          <CardHeader>
+        <Card className="lg:col-span-4 min-w-0">
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base">Daftar Role ({roles.length})</CardTitle>
             <CardDescription>
               Pilih role untuk melihat dan mengubah matriks izin modulnya
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2.5">
+          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0 space-y-2.5">
             {loading ? (
               <div className="py-10 text-center text-sm text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
@@ -348,9 +345,9 @@ export default function RolesPage() {
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-2.5 min-w-0">
                         <div
-                          className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
                             isSelected
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted text-muted-foreground"
@@ -358,18 +355,18 @@ export default function RolesPage() {
                         >
                           <Shield className="h-4 w-4" />
                         </div>
-                        <div>
-                          <div className="font-semibold text-sm">
+                        <div className="min-w-0">
+                          <div className="font-semibold text-sm truncate">
                             {r.display_name || r.name}
                           </div>
-                          <div className="font-mono text-xs text-muted-foreground">
+                          <div className="font-mono text-xs text-muted-foreground truncate">
                             {r.name}
                           </div>
                         </div>
                       </div>
 
                       <div
-                        className="flex items-center gap-1"
+                        className="flex items-center gap-1 shrink-0"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {canUpdate && (
@@ -409,31 +406,29 @@ export default function RolesPage() {
         </Card>
 
         {/* Right 8 Cols: Interactive Module CRUD Permission Matrix */}
-        <Card className="lg:col-span-8">
-          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-base">
+        <Card className="lg:col-span-8 min-w-0">
+          <CardHeader className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <CardTitle className="text-base break-words">
                   Matriks Permission:{" "}
                   {selectedRole?.display_name || selectedRole?.name || "-"}
                 </CardTitle>
                 {selectedRole && (
-                  <Badge variant="outline" className="font-mono text-xs">
+                  <Badge variant="outline" className="font-mono text-xs shrink-0">
                     ID #{selectedRole.id}
                   </Badge>
                 )}
               </div>
-              <CardDescription>
-                Endpoint:{" "}
-                <code className="font-mono text-xs">
-                  PUT /api/roles/{selectedRole?.id || ":id"}/permissions
-                </code>
+              <CardDescription className="mt-1">
+                Atur izin Create, Read, Update, dan Delete untuk setiap modul
               </CardDescription>
             </div>
 
             {canUpdate && selectedRole && (
               <Button
                 size="sm"
+                className="w-full sm:w-auto shrink-0"
                 onClick={handleSavePermissions}
                 disabled={savingPerms}
               >
@@ -452,65 +447,133 @@ export default function RolesPage() {
             )}
           </CardHeader>
 
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Module Code</TableHead>
-                  <TableHead className="text-center">Create</TableHead>
-                  <TableHead className="text-center">Read</TableHead>
-                  <TableHead className="text-center">Update</TableHead>
-                  <TableHead className="text-center">Delete</TableHead>
-                  <TableHead className="text-right">Aksi Cepat</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {permissionDraft.map((item) => {
-                  const modInfo = modules.find(
-                    (m) => m.code === item.module_code
-                  );
-                  const allEnabled =
-                    item.create && item.read && item.update && item.delete;
-                  return (
-                    <TableRow key={item.module_code}>
-                      <TableCell>
-                        <div className="font-medium text-sm">
+          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+            {/* Mobile Card View (< md) */}
+            <div className="space-y-3 md:hidden">
+              {permissionDraft.map((item) => {
+                const modInfo = modules.find(
+                  (m) => m.code === item.module_code
+                );
+                const allEnabled =
+                  item.create && item.read && item.update && item.delete;
+                return (
+                  <div
+                    key={item.module_code}
+                    className="rounded-xl border bg-card p-3.5 space-y-3"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="font-medium text-sm truncate">
                           {modInfo?.name || item.module_code}
                         </div>
-                        <div className="font-mono text-xs text-muted-foreground">
+                        <div className="font-mono text-xs text-muted-foreground truncate">
                           {item.module_code}
                         </div>
-                      </TableCell>
-                      {["create", "read", "update", "delete"].map((action) => (
-                        <TableCell key={action} className="text-center">
+                      </div>
+                      {canUpdate && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-xs h-7 px-2.5 shrink-0"
+                          onClick={() =>
+                            handleToggleRowAll(item.module_code, !allEnabled)
+                          }
+                        >
+                          {allEnabled ? "Cabut Semua" : "Semua"}
+                        </Button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { key: "create", label: "Create" },
+                        { key: "read", label: "Read" },
+                        { key: "update", label: "Update" },
+                        { key: "delete", label: "Delete" },
+                      ].map(({ key, label }) => (
+                        <div
+                          key={key}
+                          className="flex items-center justify-between rounded-lg border bg-muted/30 px-2.5 py-2"
+                        >
+                          <span className="text-xs font-medium text-muted-foreground">
+                            {label}
+                          </span>
                           <Switch
                             disabled={!canUpdate}
-                            checked={Boolean(item[action])}
+                            checked={Boolean(item[key])}
                             onCheckedChange={() =>
-                              handleTogglePerm(item.module_code, action)
+                              handleTogglePerm(item.module_code, key)
                             }
                           />
-                        </TableCell>
+                        </div>
                       ))}
-                      <TableCell className="text-right">
-                        {canUpdate && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs h-7"
-                            onClick={() =>
-                              handleToggleRowAll(item.module_code, !allEnabled)
-                            }
-                          >
-                            {allEnabled ? "Cabut Semua" : "Izinkan Semua"}
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View (>= md) */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Module Code</TableHead>
+                    <TableHead className="text-center">Create</TableHead>
+                    <TableHead className="text-center">Read</TableHead>
+                    <TableHead className="text-center">Update</TableHead>
+                    <TableHead className="text-center">Delete</TableHead>
+                    <TableHead className="text-right">Aksi Cepat</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {permissionDraft.map((item) => {
+                    const modInfo = modules.find(
+                      (m) => m.code === item.module_code
+                    );
+                    const allEnabled =
+                      item.create && item.read && item.update && item.delete;
+                    return (
+                      <TableRow key={item.module_code}>
+                        <TableCell>
+                          <div className="font-medium text-sm">
+                            {modInfo?.name || item.module_code}
+                          </div>
+                          <div className="font-mono text-xs text-muted-foreground">
+                            {item.module_code}
+                          </div>
+                        </TableCell>
+                        {["create", "read", "update", "delete"].map((action) => (
+                          <TableCell key={action} className="text-center">
+                            <Switch
+                              disabled={!canUpdate}
+                              checked={Boolean(item[action])}
+                              onCheckedChange={() =>
+                                handleTogglePerm(item.module_code, action)
+                              }
+                            />
+                          </TableCell>
+                        ))}
+                        <TableCell className="text-right">
+                          {canUpdate && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs h-7 whitespace-nowrap"
+                              onClick={() =>
+                                handleToggleRowAll(item.module_code, !allEnabled)
+                              }
+                            >
+                              {allEnabled ? "Cabut Semua" : "Izinkan Semua"}
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>

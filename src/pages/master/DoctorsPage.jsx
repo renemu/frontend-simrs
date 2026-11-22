@@ -238,9 +238,7 @@ export default function DoctorsPage() {
             Master Dokter &amp; Poliklinik
           </h1>
           <p className="text-sm text-muted-foreground">
-            Kelola dokter/tenaga medis dan departemen/poliklinik rawat jalan (
-            <code className="font-mono text-xs">/api/doctors</code> &amp;{" "}
-            <code className="font-mono text-xs">/api/departments</code>)
+            Kelola data dokter, tenaga medis, dan poliklinik rawat jalan
           </p>
         </div>
 

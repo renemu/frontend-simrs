@@ -67,7 +67,7 @@ export function printInvoiceDocument(invoice) {
         <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:center;">${it.quantity}</td>
         <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:right;">${formatCurrency(it.unit_price)}</td>
         <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;">${formatCurrency(it.line_total)}</td>
-      </tr>`
+      </tr>`,
     )
     .join("");
 
@@ -79,7 +79,7 @@ export function printInvoiceDocument(invoice) {
         <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">${formatDateTime(p.paid_at)}</td>
         <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">${p.payment_channel || p.payment_method}</td>
         <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;">${formatCurrency(p.amount)}</td>
-      </tr>`
+      </tr>`,
     )
     .join("");
 
@@ -87,8 +87,8 @@ export function printInvoiceDocument(invoice) {
     invoice.payment_status === "paid"
       ? "LUNAS"
       : invoice.payment_status === "partially_paid"
-      ? "DIBAYAR SEBAGIAN"
-      : "BELUM LUNAS";
+        ? "DIBAYAR SEBAGIAN"
+        : "BELUM LUNAS";
 
   win.document.write(`
     <!doctype html>
@@ -110,7 +110,7 @@ export function printInvoiceDocument(invoice) {
       <body>
         <div class="header">
           <div>
-            <h2 style="margin:0;">RS SIMRS INOVA MEDIKA</h2>
+            <h2 style="margin:0;">RS SIMRS</h2>
             <p style="margin:4px 0 0;font-size:12px;color:#4b5563;">Instalasi Pelayanan Rawat Jalan — Invoice &amp; Bukti Pembayaran</p>
           </div>
           <div style="text-align:right;">
@@ -210,11 +210,14 @@ export default function BillingsPage() {
       setInvoices(Array.isArray(invRes?.data) ? invRes.data : []);
       setVisits(
         (Array.isArray(visitRes?.data) ? visitRes.data : []).filter(
-          (v) => v.status !== "cancelled"
-        )
+          (v) => v.status !== "cancelled",
+        ),
       );
     } catch (err) {
-      setFeedback({ type: "error", message: err?.message || "Gagal memuat data billing." });
+      setFeedback({
+        type: "error",
+        message: err?.message || "Gagal memuat data billing.",
+      });
     } finally {
       setLoading(false);
     }
@@ -226,10 +229,16 @@ export default function BillingsPage() {
 
   const handleOpenGenerate = () => {
     const activeVisitIds = new Set(
-      invoices.filter((i) => i.status === "issued").map((i) => i.visit_id)
+      invoices.filter((i) => i.status === "issued").map((i) => i.visit_id),
     );
     const unbilled = visits.filter((v) => !activeVisitIds.has(v.id));
-    setSelectedVisitId(unbilled[0] ? String(unbilled[0].id) : visits[0] ? String(visits[0].id) : "");
+    setSelectedVisitId(
+      unbilled[0]
+        ? String(unbilled[0].id)
+        : visits[0]
+          ? String(visits[0].id)
+          : "",
+    );
     setGenNotes("");
     setGenOpen(true);
   };
@@ -240,7 +249,10 @@ export default function BillingsPage() {
     setSaving(true);
     setFeedback({ type: "", message: "" });
     try {
-      const res = await billingService.generateForVisit(Number(selectedVisitId), genNotes);
+      const res = await billingService.generateForVisit(
+        Number(selectedVisitId),
+        genNotes,
+      );
       setGenOpen(false);
       setFeedback({
         type: "success",
@@ -248,7 +260,10 @@ export default function BillingsPage() {
       });
       loadData();
     } catch (err) {
-      setFeedback({ type: "error", message: err?.message || "Gagal menerbitkan tagihan." });
+      setFeedback({
+        type: "error",
+        message: err?.message || "Gagal menerbitkan tagihan.",
+      });
     } finally {
       setSaving(false);
     }
@@ -257,7 +272,7 @@ export default function BillingsPage() {
   const handleRevise = async (invoice) => {
     const reason = window.prompt(
       `Revisi tagihan ${invoice.invoice_number} karena perubahan tindakan/obat pasca-billing. Masukkan alasan revisi:`,
-      "Penyesuaian item layanan medis"
+      "Penyesuaian item layanan medis",
     );
     if (reason === null) return;
     try {
@@ -268,7 +283,10 @@ export default function BillingsPage() {
       });
       loadData();
     } catch (err) {
-      setFeedback({ type: "error", message: err?.message || "Gagal merevisi tagihan." });
+      setFeedback({
+        type: "error",
+        message: err?.message || "Gagal merevisi tagihan.",
+      });
     }
   };
 
@@ -281,7 +299,8 @@ export default function BillingsPage() {
             Tagihan / Billing Rawat Jalan
           </h1>
           <p className="text-sm text-muted-foreground">
-            Konsolidasi biaya pendaftaran, konsultasi, tindakan, lab, dan obat resep ke dalam invoice
+            Konsolidasi biaya pendaftaran, konsultasi, tindakan, lab, dan obat
+            resep ke dalam invoice
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -300,14 +319,22 @@ export default function BillingsPage() {
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
-            Anda masuk sebagai <strong>{user?.role?.display_name || user?.role?.name}</strong> (Mode Lihat Saja). Penerbitan &amp; revisi tagihan dilakukan oleh akun <strong>Kasir</strong> (<code className="font-mono text-xs">cashier@example.com</code>).
+            Anda masuk sebagai{" "}
+            <strong>{user?.role?.display_name || user?.role?.name}</strong>{" "}
+            (Mode Lihat Saja). Penerbitan &amp; revisi tagihan dilakukan oleh
+            akun <strong>Kasir</strong> (
+            <code className="font-mono text-xs">cashier@example.com</code>).
           </AlertDescription>
         </Alert>
       )}
 
       {feedback.message && (
         <Alert variant={feedback.type === "error" ? "destructive" : "success"}>
-          {feedback.type === "error" ? <AlertCircle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
+          {feedback.type === "error" ? (
+            <AlertCircle className="h-4 w-4" />
+          ) : (
+            <CheckCircle2 className="h-4 w-4" />
+          )}
           <AlertDescription>{feedback.message}</AlertDescription>
         </Alert>
       )}
@@ -316,8 +343,12 @@ export default function BillingsPage() {
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <CardTitle className="text-base">Daftar Invoice ({invoices.length})</CardTitle>
-              <CardDescription>Total tagihan dihitung otomatis di backend dari item layanan tersimpan</CardDescription>
+              <CardTitle className="text-base">
+                Daftar Invoice ({invoices.length})
+              </CardTitle>
+              <CardDescription>
+                Total tagihan dihitung otomatis dari seluruh item layanan
+              </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
               <div className="relative w-52">
@@ -357,64 +388,111 @@ export default function BillingsPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin inline mr-2" /> Memuat tagihan...
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    <Loader2 className="h-4 w-4 animate-spin inline mr-2" />{" "}
+                    Memuat tagihan...
                   </TableCell>
                 </TableRow>
               ) : invoices.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     Belum ada invoice diterbitkan.
                   </TableCell>
                 </TableRow>
               ) : (
                 invoices.map((inv) => {
-                  const payBadge = PAY_BADGE[inv.payment_status] || { label: inv.payment_status, variant: "secondary" };
+                  const payBadge = PAY_BADGE[inv.payment_status] || {
+                    label: inv.payment_status,
+                    variant: "secondary",
+                  };
                   return (
-                    <TableRow key={inv.id} className={inv.status !== "issued" ? "opacity-60" : ""}>
+                    <TableRow
+                      key={inv.id}
+                      className={inv.status !== "issued" ? "opacity-60" : ""}
+                    >
                       <TableCell>
-                        <div className="font-mono text-xs font-bold">{inv.invoice_number}</div>
+                        <div className="font-mono text-xs font-bold">
+                          {inv.invoice_number}
+                        </div>
                         <div className="text-[11px] text-muted-foreground">
                           Rev #{inv.revision_number} • {inv.status}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium text-sm">{inv.patient?.full_name}</div>
+                        <div className="font-medium text-sm">
+                          {inv.patient?.full_name}
+                        </div>
                         <div className="text-xs text-muted-foreground">
-                          {inv.visit?.visit_number} • {inv.visit?.department_name}
+                          {inv.visit?.visit_number} •{" "}
+                          {inv.visit?.department_name}
                         </div>
                       </TableCell>
                       <TableCell className="font-mono text-xs font-semibold">
                         {formatCurrency(inv.total_amount)}
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        <div className="text-emerald-600">{formatCurrency(inv.paid_amount)}</div>
-                        <div className="text-muted-foreground">Sisa: {formatCurrency(inv.balance_amount)}</div>
+                        <div className="text-emerald-600">
+                          {formatCurrency(inv.paid_amount)}
+                        </div>
+                        <div className="text-muted-foreground">
+                          Sisa: {formatCurrency(inv.balance_amount)}
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={payBadge.variant}>{payBadge.label}</Badge>
+                        <Badge variant={payBadge.variant}>
+                          {payBadge.label}
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="inline-flex flex-wrap justify-end gap-1">
-                          <Button size="sm" variant="ghost" onClick={() => setDetailInvoice(inv)} title="Lihat Detail">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setDetailInvoice(inv)}
+                            title="Lihat Detail"
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => printInvoiceDocument(inv)} title="Cetak Invoice">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => printInvoiceDocument(inv)}
+                            title="Cetak Invoice"
+                          >
                             <Printer className="h-4 w-4" />
                           </Button>
-                          {canUpdate && inv.status === "issued" && inv.payment_status !== "paid" && (
-                            <Button size="sm" variant="ghost" onClick={() => handleRevise(inv)} title="Revisi Invoice (BR-12)">
-                              <RotateCcw className="h-4 w-4" />
-                            </Button>
-                          )}
-                          {canPay && inv.status === "issued" && inv.payment_status !== "paid" && (
-                            <Button
-                              size="sm"
-                              onClick={() => navigate(`/finance/payments?invoiceId=${inv.id}`)}
-                            >
-                              <CreditCard className="h-3.5 w-3.5" /> Bayar
-                            </Button>
-                          )}
+                          {canUpdate &&
+                            inv.status === "issued" &&
+                            inv.payment_status !== "paid" && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleRevise(inv)}
+                                title="Revisi Invoice (BR-12)"
+                              >
+                                <RotateCcw className="h-4 w-4" />
+                              </Button>
+                            )}
+                          {canPay &&
+                            inv.status === "issued" &&
+                            inv.payment_status !== "paid" && (
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  navigate(
+                                    `/finance/payments?invoiceId=${inv.id}`,
+                                  )
+                                }
+                              >
+                                <CreditCard className="h-3.5 w-3.5" /> Bayar
+                              </Button>
+                            )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -445,33 +523,54 @@ export default function BillingsPage() {
                   <option value="">-- Pilih Kunjungan --</option>
                   {visits.map((v) => (
                     <option key={v.id} value={v.id}>
-                      {v.visit_number} — {v.patient?.full_name} ({v.department?.name})
+                      {v.visit_number} — {v.patient?.full_name} (
+                      {v.department?.name})
                     </option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1.5">
                 <Label>Catatan Tagihan (Opsional)</Label>
-                <Input value={genNotes} onChange={(e) => setGenNotes(e.target.value)} placeholder="Catatan kasir..." />
+                <Input
+                  value={genNotes}
+                  onChange={(e) => setGenNotes(e.target.value)}
+                  placeholder="Catatan kasir..."
+                />
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setGenOpen(false)}>Batal</Button>
-              <Button type="submit" disabled={saving}>Terbitkan Invoice</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setGenOpen(false)}
+              >
+                Batal
+              </Button>
+              <Button type="submit" disabled={saving}>
+                Terbitkan Invoice
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
       {/* Detail Invoice Dialog */}
-      <Dialog open={Boolean(detailInvoice)} onOpenChange={() => setDetailInvoice(null)}>
+      <Dialog
+        open={Boolean(detailInvoice)}
+        onOpenChange={() => setDetailInvoice(null)}
+      >
         <DialogContent onClose={() => setDetailInvoice(null)}>
           {detailInvoice && (
             <>
               <DialogHeader>
                 <DialogTitle className="flex items-center justify-between pr-6">
                   <span>Invoice {detailInvoice.invoice_number}</span>
-                  <Badge variant={PAY_BADGE[detailInvoice.payment_status]?.variant || "secondary"}>
+                  <Badge
+                    variant={
+                      PAY_BADGE[detailInvoice.payment_status]?.variant ||
+                      "secondary"
+                    }
+                  >
                     {PAY_BADGE[detailInvoice.payment_status]?.label}
                   </Badge>
                 </DialogTitle>
@@ -480,12 +579,18 @@ export default function BillingsPage() {
                 <div className="grid grid-cols-2 gap-2 rounded-lg border bg-muted/30 p-3">
                   <div>
                     <div className="text-muted-foreground">Pasien</div>
-                    <div className="font-semibold text-sm">{detailInvoice.patient?.full_name}</div>
-                    <div className="font-mono">{detailInvoice.patient?.medical_record_number}</div>
+                    <div className="font-semibold text-sm">
+                      {detailInvoice.patient?.full_name}
+                    </div>
+                    <div className="font-mono">
+                      {detailInvoice.patient?.medical_record_number}
+                    </div>
                   </div>
                   <div className="text-right">
                     <div className="text-muted-foreground">Kunjungan</div>
-                    <div className="font-mono font-semibold">{detailInvoice.visit?.visit_number}</div>
+                    <div className="font-mono font-semibold">
+                      {detailInvoice.visit?.visit_number}
+                    </div>
                     <div>{detailInvoice.visit?.department_name}</div>
                   </div>
                 </div>
@@ -503,10 +608,14 @@ export default function BillingsPage() {
                       <TableRow key={it.id}>
                         <TableCell>
                           <div className="font-medium">{it.description}</div>
-                          <div className="text-[10px] uppercase text-muted-foreground">{it.item_type}</div>
+                          <div className="text-[10px] uppercase text-muted-foreground">
+                            {it.item_type}
+                          </div>
                         </TableCell>
                         <TableCell>{it.quantity}</TableCell>
-                        <TableCell className="text-right font-mono">{formatCurrency(it.line_total)}</TableCell>
+                        <TableCell className="text-right font-mono">
+                          {formatCurrency(it.line_total)}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -515,20 +624,31 @@ export default function BillingsPage() {
                 <div className="space-y-1 border-t pt-3">
                   <div className="flex justify-between">
                     <span>Total Tagihan</span>
-                    <strong className="font-mono">{formatCurrency(detailInvoice.total_amount)}</strong>
+                    <strong className="font-mono">
+                      {formatCurrency(detailInvoice.total_amount)}
+                    </strong>
                   </div>
                   <div className="flex justify-between text-emerald-600">
                     <span>Total Terbayar</span>
-                    <span className="font-mono">{formatCurrency(detailInvoice.paid_amount)}</span>
+                    <span className="font-mono">
+                      {formatCurrency(detailInvoice.paid_amount)}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm font-bold border-t pt-1.5">
                     <span>Sisa Tagihan</span>
-                    <span className="font-mono">{formatCurrency(detailInvoice.balance_amount)}</span>
+                    <span className="font-mono">
+                      {formatCurrency(detailInvoice.balance_amount)}
+                    </span>
                   </div>
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDetailInvoice(null)}>Tutup</Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setDetailInvoice(null)}
+                >
+                  Tutup
+                </Button>
                 <Button onClick={() => printInvoiceDocument(detailInvoice)}>
                   <Printer className="h-4 w-4" /> Cetak Invoice / Kwitansi
                 </Button>

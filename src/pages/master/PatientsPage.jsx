@@ -183,8 +183,7 @@ export default function PatientsPage() {
             Master Data Pasien
           </h1>
           <p className="text-sm text-muted-foreground">
-            Kelola identitas pasien dan Nomor Rekam Medis (No. RM) unik (
-            <code className="font-mono text-xs">/api/patients</code>)
+            Kelola identitas pasien dan Nomor Rekam Medis (No. RM)
           </p>
         </div>
 

@@ -5,13 +5,10 @@ import {
   AppWindow,
   Bell,
   CheckCircle2,
-  FileText,
   Loader2,
   Moon,
   Palette,
-  Plug,
   Save,
-  Server,
   ShieldCheck,
   Sun,
   User as UserIcon,
@@ -31,7 +28,6 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Switch } from "../../components/ui/switch";
 import { useAuth } from "../../context/AuthContext";
-import { API_BASE_URL } from "../../services/api";
 import { formatDateTime } from "../../lib/utils";
 
 const THEME_OPTIONS = [
@@ -45,7 +41,7 @@ const SIDEBAR_TYPES = [
   {
     id: "floating",
     label: "Floating Sidebar",
-    desc: "Sidebar melayang dengan sudut membulat modern (shadcn floating)",
+    desc: "Sidebar melayang dengan sudut membulat modern",
   },
   {
     id: "sidebar",
@@ -62,11 +58,9 @@ const SIDEBAR_TYPES = [
 export default function SettingsPage() {
   const {
     user,
-    apiInfo,
     darkMode,
     setDarkMode,
     updateProfile,
-    checkBackendHealth,
   } = useAuth();
   const location = useLocation();
 
@@ -101,8 +95,7 @@ export default function SettingsPage() {
       setProfileForm((p) => ({ ...p, password: "" }));
       setFeedback({
         type: "success",
-        message:
-          "Profil, tema, dan preferensi layout berhasil disimpan ke Backend Yii2 (/api/auth/profile).",
+        message: "Profil, tema, dan preferensi tampilan berhasil disimpan.",
       });
     } catch (err) {
       setFeedback({
@@ -118,19 +111,18 @@ export default function SettingsPage() {
   const isNotificationView = location.pathname.includes("/notification");
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
           {isLogsView
-            ? "Activity Logs & Sesi Keamanan"
+            ? "Sesi & Keamanan Akun"
             : isNotificationView
             ? "Pusat Notifikasi SIMRS"
-            : "Pengaturan Profil, Appearance & Integrasi"}
+            : "Pengaturan Profil & Tampilan"}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Terhubung dengan endpoint{" "}
-          <code className="font-mono text-xs">PUT /api/auth/profile</code> dan{" "}
-          <code className="font-mono text-xs">GET /</code> pada Backend Yii2
+          Kelola informasi profil pengguna, tema warna, dan preferensi tata
+          letak aplikasi
         </p>
       </div>
 
@@ -147,18 +139,18 @@ export default function SettingsPage() {
         </Alert>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* Left 7 Cols: Profile & Appearance Form (PUT /api/auth/profile) */}
-        <Card className="lg:col-span-7">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-12">
+        {/* Left 7 Cols: Profile & Appearance Form */}
+        <Card className="lg:col-span-7 min-w-0">
           <form onSubmit={handleSaveProfile}>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <UserIcon className="h-4 w-4 text-primary" />
-                Profil Pengguna & Preferensi UI
+                Profil Pengguna &amp; Preferensi Tampilan
               </CardTitle>
               <CardDescription>
-                Perubahan tersimpan langsung ke kolom <code>theme</code>,{" "}
-                <code>sidebar_type</code>, dan profil tabel <code>users</code>
+                Perubahan profil, tema, dan gaya sidebar akan langsung
+                diterapkan pada akun Anda
               </CardDescription>
             </CardHeader>
 
@@ -175,7 +167,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Email (Read-only)</Label>
+                  <Label>Email</Label>
                   <Input value={user?.email || ""} disabled />
                 </div>
               </div>
@@ -228,7 +220,7 @@ export default function SettingsPage() {
               <div className="space-y-2.5 pt-2 border-t">
                 <div className="flex items-center gap-2">
                   <Palette className="h-4 w-4 text-primary" />
-                  <Label>Warna Tema Utama (User Theme)</Label>
+                  <Label>Warna Tema Utama</Label>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-2.5">
                   {THEME_OPTIONS.map((t) => {
@@ -247,7 +239,7 @@ export default function SettingsPage() {
                         }`}
                       >
                         <span
-                          className={`h-5 w-5 rounded-full ${t.color} shadow-xs`}
+                          className={`h-5 w-5 rounded-full shrink-0 ${t.color} shadow-xs`}
                         />
                         <span className="text-xs font-medium">{t.label}</span>
                       </button>
@@ -260,7 +252,7 @@ export default function SettingsPage() {
               <div className="space-y-2.5 pt-2 border-t">
                 <div className="flex items-center gap-2">
                   <AppWindow className="h-4 w-4 text-primary" />
-                  <Label>Gaya Tata Letak Sidebar (sidebar_type)</Label>
+                  <Label>Gaya Tata Letak Sidebar</Label>
                 </div>
                 <div className="grid gap-2">
                   {SIDEBAR_TYPES.map((st) => {
@@ -275,13 +267,13 @@ export default function SettingsPage() {
                             sidebar_type: st.id,
                           }))
                         }
-                        className={`flex items-center justify-between rounded-xl border p-3 text-left transition-all ${
+                        className={`flex items-center justify-between gap-2 rounded-xl border p-3 text-left transition-all ${
                           active
                             ? "border-primary bg-primary/5 ring-1 ring-primary/30"
                             : "hover:bg-accent/50"
                         }`}
                       >
-                        <div>
+                        <div className="min-w-0">
                           <div className="text-xs font-semibold">
                             {st.label}
                           </div>
@@ -289,8 +281,8 @@ export default function SettingsPage() {
                             {st.desc}
                           </div>
                         </div>
-                        <Badge variant={active ? "default" : "outline"}>
-                          {st.id}
+                        <Badge variant={active ? "default" : "outline"} className="shrink-0">
+                          {active ? "Aktif" : "Pilih"}
                         </Badge>
                       </button>
                     );
@@ -299,14 +291,14 @@ export default function SettingsPage() {
               </div>
 
               {/* Dark Mode Switch */}
-              <div className="flex items-center justify-between rounded-xl border p-3.5">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between gap-3 rounded-xl border p-3.5">
+                <div className="flex items-center gap-3 min-w-0">
                   {darkMode ? (
-                    <Moon className="h-4 w-4 text-primary" />
+                    <Moon className="h-4 w-4 text-primary shrink-0" />
                   ) : (
-                    <Sun className="h-4 w-4 text-amber-500" />
+                    <Sun className="h-4 w-4 text-amber-500 shrink-0" />
                   )}
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-sm font-medium">Mode Tampilan Gelap</div>
                     <div className="text-xs text-muted-foreground">
                       Aktifkan tema gelap ramah mata untuk shift malam RS
@@ -318,7 +310,7 @@ export default function SettingsPage() {
             </CardContent>
 
             <CardFooter className="justify-end">
-              <Button type="submit" disabled={saving}>
+              <Button type="submit" disabled={saving} className="w-full sm:w-auto">
                 {saving ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -327,7 +319,7 @@ export default function SettingsPage() {
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    Simpan Pengaturan ke Backend
+                    Simpan Pengaturan
                   </>
                 )}
               </Button>
@@ -335,84 +327,53 @@ export default function SettingsPage() {
           </form>
         </Card>
 
-        {/* Right 5 Cols: Backend Yii2 Integration & Session Security Info */}
-        <div className="lg:col-span-5 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Plug className="h-4 w-4 text-primary" />
-                Status Integrasi Backend Yii2
-              </CardTitle>
-              <CardDescription>
-                Informasi koneksi real-time ke server RESTful API
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-xs">
-              <div className="flex items-center justify-between py-1.5 border-b">
-                <span className="text-muted-foreground">Base URL</span>
-                <code className="font-mono font-semibold">{API_BASE_URL}</code>
-              </div>
-              <div className="flex items-center justify-between py-1.5 border-b">
-                <span className="text-muted-foreground">Nama Aplikasi</span>
-                <span className="font-medium">{apiInfo?.name || "-"}</span>
-              </div>
-              <div className="flex items-center justify-between py-1.5 border-b">
-                <span className="text-muted-foreground">Versi & Environment</span>
-                <Badge variant="secondary">
-                  v{apiInfo?.version || "1.0.0"} ({apiInfo?.environment || "dev"})
-                </Badge>
-              </div>
-              <div className="flex items-center justify-between py-1.5 border-b">
-                <span className="text-muted-foreground">Status Server</span>
-                <Badge variant={apiInfo?.online ? "success" : "destructive"}>
-                  {apiInfo?.online ? "ONLINE" : "OFFLINE"}
-                </Badge>
-              </div>
-              <div className="pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={checkBackendHealth}
-                >
-                  <Server className="h-3.5 w-3.5" />
-                  Tes Ulang Koneksi API (GET /)
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
+        {/* Right 5 Cols: Account & Active Session Info */}
+        <div className="lg:col-span-5 space-y-6 min-w-0">
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 {isNotificationView ? (
                   <Bell className="h-4 w-4 text-primary" />
                 ) : (
-                  <FileText className="h-4 w-4 text-primary" />
+                  <ShieldCheck className="h-4 w-4 text-primary" />
                 )}
-                Log Aktivitas & Sesi JWT
+                Informasi Akun &amp; Sesi
               </CardTitle>
               <CardDescription>
-                Keamanan sesi stateless JWT dengan validasi{" "}
-                <code>session_version</code>
+                Ringkasan status akun dan riwayat login terakhir Anda
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
-              <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                    Sesi Login Aktif
-                  </span>
-                  <Badge variant="outline">
-                    session_version: {user?.session_version ?? 1}
-                  </Badge>
-                </div>
+              <div className="flex items-center justify-between gap-2 py-1.5 border-b">
+                <span className="text-muted-foreground">Nama Pengguna</span>
+                <span className="font-medium truncate">{user?.name || "-"}</span>
+              </div>
+              <div className="flex items-center justify-between gap-2 py-1.5 border-b">
+                <span className="text-muted-foreground">Email</span>
+                <span className="font-medium truncate">{user?.email || "-"}</span>
+              </div>
+              <div className="flex items-center justify-between gap-2 py-1.5 border-b">
+                <span className="text-muted-foreground">Peran (Role)</span>
+                <Badge variant="secondary">
+                  {user?.role?.display_name || user?.role?.name || "-"}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between gap-2 py-1.5 border-b">
+                <span className="text-muted-foreground">Status Sesi</span>
+                <Badge variant="success">Aktif</Badge>
+              </div>
+              <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5 mt-2">
                 <p className="text-muted-foreground">
-                  Login Terakhir: {formatDateTime(user?.last_login_at)}
+                  Login Terakhir:{" "}
+                  <span className="text-foreground font-medium">
+                    {formatDateTime(user?.last_login_at)}
+                  </span>
                 </p>
                 <p className="text-muted-foreground">
-                  Diperbarui: {formatDateTime(user?.updated_at)}
+                  Profil Diperbarui:{" "}
+                  <span className="text-foreground font-medium">
+                    {formatDateTime(user?.updated_at)}
+                  </span>
                 </p>
               </div>
             </CardContent>

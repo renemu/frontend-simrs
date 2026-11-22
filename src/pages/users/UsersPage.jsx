@@ -233,9 +233,7 @@ export default function UsersPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Manajemen Users</h1>
           <p className="text-sm text-muted-foreground">
-            Kelola akun pengguna SIMRS, penugasan role, serta status aktif (
-            <code className="font-mono text-xs">/api/users</code> — Module Code:{" "}
-            <code className="font-mono text-xs">users-list</code>)
+            Kelola akun pengguna SIMRS, penugasan role, dan status aktif
           </p>
         </div>
 
@@ -348,7 +346,7 @@ export default function UsersPage() {
                   <TableCell colSpan={7} className="h-32 text-center">
                     <div className="inline-flex items-center gap-2 text-muted-foreground">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Memuat daftar pengguna dari Backend Yii2...
+                      Memuat daftar pengguna...
                     </div>
                   </TableCell>
                 </TableRow>
@@ -490,7 +488,7 @@ export default function UsersPage() {
               <DialogDescription>
                 {editingUser
                   ? "Perbarui informasi profil, role, atau reset kata sandi pengguna."
-                  : "Buat akun pengguna baru yang langsung tersimpan di PostgreSQL."}
+                  : "Buat akun pengguna baru dan tentukan hak aksesnya."}
               </DialogDescription>
             </DialogHeader>
 

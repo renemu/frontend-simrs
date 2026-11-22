@@ -8,7 +8,6 @@ import {
   Loader2,
   Printer,
   RefreshCw,
-  ShieldCheck,
 } from "lucide-react";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 import { Badge } from "../../components/ui/badge";
@@ -57,7 +56,6 @@ export default function PaymentsPage() {
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
   const [idempotencyKey, setIdempotencyKey] = useState(generateIdempotencyKey);
-  const [lastSubmitted, setLastSubmitted] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -109,12 +107,11 @@ export default function PaymentsPage() {
       };
       const res = await paymentService.record(activeInvoice.id, payload, useKey);
       const isReplay = Boolean(res?.idempotent_replay);
-      setLastSubmitted({ invoiceId: activeInvoice.id, key: useKey, amount: Number(customAmount) });
 
       if (isReplay) {
         setFeedback({
           type: "success",
-          message: `Proteksi Idempotency aktif: request retry dengan key "${useKey}" mengembalikan pembayaran asli tanpa menduplikasi data.`,
+          message: "Pembayaran ini sudah tercatat sebelumnya (transaksi duplikat dicegah secara otomatis).",
         });
       } else {
         setFeedback({
@@ -147,7 +144,7 @@ export default function PaymentsPage() {
             Pembayaran &amp; Bukti Kwitansi
           </h1>
           <p className="text-sm text-muted-foreground">
-            Pembayaran tunai/non-tunai simulasi, pembayaran parsial bertahap, dan proteksi anti-duplikasi (Idempotency-Key)
+            Pencatatan pembayaran tunai/non-tunai, pembayaran parsial bertahap, dan cetak bukti kwitansi
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={loadData}>
@@ -291,31 +288,11 @@ export default function PaymentsPage() {
                     />
                   </div>
 
-                  <div className="rounded-lg border bg-muted/20 p-2.5 text-[11px] text-muted-foreground flex items-center justify-between gap-2">
-                    <span className="truncate font-mono">
-                      <ShieldCheck className="h-3.5 w-3.5 inline mr-1 text-emerald-600" />
-                      Key: {idempotencyKey}
-                    </span>
-                  </div>
-
                   <Button type="submit" className="w-full" disabled={submitting}>
                     {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
                     Simpan Pembayaran
                   </Button>
                 </>
-              )}
-
-              {canPay && lastSubmitted && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full text-xs"
-                  disabled={submitting}
-                  onClick={() => submitPayment(lastSubmitted.key, lastSubmitted.amount)}
-                >
-                  Simulasi Retry Jaringan (Uji Anti-Duplikasi Idempotency-Key)
-                </Button>
               )}
             </form>
           </CardContent>

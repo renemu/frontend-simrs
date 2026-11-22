@@ -200,8 +200,7 @@ export default function SchedulesPage() {
             Master Jadwal Praktik Dokter
           </h1>
           <p className="text-sm text-muted-foreground">
-            Jadwal praktik aktif dengan validasi anti-tumpang-tindih (
-            <code className="font-mono text-xs">/api/doctor-schedules</code>)
+            Pengelolaan jadwal praktik dokter per hari dan poliklinik
           </p>
         </div>
         <div className="flex items-center gap-2">

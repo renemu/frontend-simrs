@@ -52,10 +52,8 @@ export default function ModulePlaceholderPage({
             Status Tahap Implementasi Modul
           </CardTitle>
           <CardDescription>
-            Fondasi Auth, Role, dan RBAC modul ini sudah aktif dan terverifikasi
-            pada sisi backend maupun frontend. Implementasi fitur CRUD &amp;
-            transaksi domain dijadwalkan setelah persetujuan desain database
-            &amp; API di <code className="font-mono text-xs">docs/</code>.
+            Hak akses untuk modul ini sudah aktif. Fitur operasional pada modul
+            ini sedang dalam tahap pengembangan.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

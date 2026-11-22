@@ -160,8 +160,7 @@ export default function MedicinesPage() {
             Master Obat, Stok &amp; Harga
           </h1>
           <p className="text-sm text-muted-foreground">
-            Pengelolaan inventaris farmasi dengan batasan stok non-negatif (
-            <code className="font-mono text-xs">/api/medicines</code>)
+            Pengelolaan inventaris farmasi, stok, dan harga obat
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -188,7 +187,7 @@ export default function MedicinesPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base">Daftar Obat ({items.length})</CardTitle>
-              <CardDescription>Pengurangan stok operasional terjadi atomik saat penyerahan resep oleh Farmasi</CardDescription>
+              <CardDescription>Pengurangan stok terjadi otomatis saat penyerahan resep oleh Farmasi</CardDescription>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <div className="relative w-56">

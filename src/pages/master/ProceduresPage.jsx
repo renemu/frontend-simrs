@@ -163,8 +163,7 @@ export default function ProceduresPage() {
             Master Tindakan &amp; Tarif Medis
           </h1>
           <p className="text-sm text-muted-foreground">
-            Katalog tindakan medis, diagnostik, dan laboratorium beserta tarif dasar (
-            <code className="font-mono text-xs">/api/procedures</code>)
+            Katalog tindakan medis, diagnostik, dan laboratorium beserta tarif dasar
           </p>
         </div>
         <div className="flex items-center gap-2">

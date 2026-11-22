@@ -190,20 +190,18 @@ export default function ModulesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Manajemen Modul & Hierarki Menu
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            Manajemen Modul &amp; Hierarki Menu
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Kelola struktur pohon menu sidebar dan kode modul RBAC (
-            <code className="font-mono text-xs">/api/modules</code> &{" "}
-            <code className="font-mono text-xs">/api/modules/tree</code>)
+          <p className="text-sm text-muted-foreground break-words">
+            Kelola struktur pohon menu sidebar dan kode modul RBAC.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Button variant="outline" size="sm" onClick={loadModules}>
             <RefreshCw className="h-4 w-4" />
             Refresh
@@ -230,21 +228,19 @@ export default function ModulesPage() {
         </Alert>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* Left 5 Cols: Hierarchical Tree Preview from GET /api/modules/tree */}
-        <Card className="lg:col-span-5">
-          <CardHeader>
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-12">
+        {/* Left 5 Cols: Hierarchical Tree Preview */}
+        <Card className="lg:col-span-5 min-w-0">
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base flex items-center gap-2">
-              <FolderTree className="h-4 w-4 text-primary" />
-              Struktur Hierarki Pohon Menu
+              <FolderTree className="h-4 w-4 text-primary shrink-0" />
+              <span>Struktur Hierarki Pohon Menu</span>
             </CardTitle>
             <CardDescription>
-              Visualisasi <code className="font-mono text-xs">parent_id</code>{" "}
-              &rarr; <code className="font-mono text-xs">children</code> dari
-              Backend Yii2
+              Visualisasi hierarki menu parent &amp; submenu sidebar
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0 space-y-3">
             {loading ? (
               <div className="py-10 text-center text-sm text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
@@ -254,43 +250,54 @@ export default function ModulesPage() {
               tree.map((node) => (
                 <div
                   key={node.id}
-                  className="rounded-xl border bg-muted/20 p-3.5 space-y-2.5"
+                  className="rounded-xl border bg-muted/20 p-3 sm:p-3.5 space-y-2.5 min-w-0"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <DynamicIcon name={node.icon} className="h-4 w-4" />
                       </div>
-                      <div>
-                        <div className="font-semibold text-sm">{node.name}</div>
-                        <div className="font-mono text-xs text-muted-foreground">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-sm truncate">
+                          {node.name}
+                        </div>
+                        <div className="font-mono text-xs text-muted-foreground truncate">
                           {node.code} • {node.path || "(group)"}
                         </div>
                       </div>
                     </div>
-                    <Badge variant="outline">Order: {node.sort_order}</Badge>
+                    <Badge variant="outline" className="shrink-0 text-[11px]">
+                      Order: {node.sort_order}
+                    </Badge>
                   </div>
 
                   {Array.isArray(node.children) && node.children.length > 0 && (
-                    <div className="ml-4 space-y-1.5 border-l-2 border-primary/20 pl-3 pt-1">
+                    <div className="ml-2 sm:ml-4 space-y-1.5 border-l-2 border-primary/20 pl-2.5 sm:pl-3 pt-1">
                       {node.children.map((child) => (
                         <div
                           key={child.id}
-                          className="flex items-center justify-between rounded-lg border bg-card px-3 py-2 text-xs"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 rounded-lg border bg-card px-2.5 sm:px-3 py-2 text-xs min-w-0"
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
                             <DynamicIcon
                               name={child.icon}
-                              className="h-3.5 w-3.5 text-muted-foreground"
+                              className="h-3.5 w-3.5 text-muted-foreground shrink-0"
                             />
-                            <span className="font-medium">{child.name}</span>
-                            <code className="text-[11px] text-muted-foreground">
+                            <span className="font-medium truncate">
+                              {child.name}
+                            </span>
+                            <code className="text-[11px] text-muted-foreground truncate hidden sm:inline">
                               ({child.code})
                             </code>
                           </div>
-                          <span className="font-mono text-[11px] text-primary">
-                            {child.path}
-                          </span>
+                          <div className="flex items-center justify-between sm:justify-end gap-2 pl-5 sm:pl-0 min-w-0">
+                            <code className="text-[11px] text-muted-foreground truncate sm:hidden">
+                              {child.code}
+                            </code>
+                            <span className="font-mono text-[11px] text-primary truncate">
+                              {child.path}
+                            </span>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -301,82 +308,153 @@ export default function ModulesPage() {
           </CardContent>
         </Card>
 
-        {/* Right 7 Cols: Flat Modules Table */}
-        <Card className="lg:col-span-7">
-          <CardHeader>
+        {/* Right 7 Cols: Flat Modules List / Table */}
+        <Card className="lg:col-span-7 min-w-0">
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base flex items-center gap-2">
-              <ListTree className="h-4 w-4 text-primary" />
-              Daftar Seluruh Modul ({modules.length})
+              <ListTree className="h-4 w-4 text-primary shrink-0" />
+              <span>Daftar Seluruh Modul ({modules.length})</span>
             </CardTitle>
             <CardDescription>
               Klik ikon edit untuk mengubah nama, path, icon, atau urutan menu
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Nama Modul</TableHead>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Path</TableHead>
-                  <TableHead>Parent</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {modules.map((mod) => (
-                  <TableRow key={mod.id}>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      #{mod.id}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2.5">
-                        <DynamicIcon
-                          name={mod.icon}
-                          className="h-4 w-4 text-primary shrink-0"
-                        />
-                        <span className="font-medium text-sm">{mod.name}</span>
+          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+            {/* Mobile Card View (< md) */}
+            <div className="space-y-2.5 md:hidden">
+              {modules.map((mod) => (
+                <div
+                  key={mod.id}
+                  className="rounded-xl border bg-card p-3.5 space-y-2.5"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <DynamicIcon name={mod.icon} className="h-4 w-4" />
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className="font-mono text-xs">
-                        {mod.code}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {mod.path || "-"}
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {mod.parent_id ? `#${mod.parent_id}` : "Root"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="inline-flex items-center gap-1">
-                        {canUpdate && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleOpenEdit(mod)}
-                          >
-                            <Edit3 className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {canDelete && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-destructive"
-                            onClick={() => handleDeleteModule(mod)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-medium text-sm truncate">
+                            {mod.name}
+                          </span>
+                          <span className="font-mono text-[11px] text-muted-foreground shrink-0">
+                            #{mod.id}
+                          </span>
+                        </div>
+                        <div className="font-mono text-xs text-muted-foreground truncate">
+                          {mod.path || "(group)"}
+                        </div>
                       </div>
-                    </TableCell>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      {canUpdate && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleOpenEdit(mod)}
+                        >
+                          <Edit3 className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive"
+                          onClick={() => handleDeleteModule(mod)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                    <Badge variant="secondary" className="font-mono text-[11px]">
+                      {mod.code}
+                    </Badge>
+                    <Badge variant="outline" className="text-[11px]">
+                      {mod.parent_id ? `Parent #${mod.parent_id}` : "Root"}
+                    </Badge>
+                    <Badge variant="outline" className="text-[11px]">
+                      Order: {mod.sort_order ?? 0}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (>= md) */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Nama Modul</TableHead>
+                    <TableHead>Code</TableHead>
+                    <TableHead>Path</TableHead>
+                    <TableHead>Parent</TableHead>
+                    <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {modules.map((mod) => (
+                    <TableRow key={mod.id}>
+                      <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                        #{mod.id}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2.5">
+                          <DynamicIcon
+                            name={mod.icon}
+                            className="h-4 w-4 text-primary shrink-0"
+                          />
+                          <span className="font-medium text-sm whitespace-nowrap">
+                            {mod.name}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className="font-mono text-xs whitespace-nowrap">
+                          {mod.code}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                        {mod.path || "-"}
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        {mod.parent_id ? `#${mod.parent_id}` : "Root"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="inline-flex items-center gap-1">
+                          {canUpdate && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleOpenEdit(mod)}
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {canDelete && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive"
+                              onClick={() => handleDeleteModule(mod)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
