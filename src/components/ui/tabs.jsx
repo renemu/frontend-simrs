@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "../../lib/utils";
 
-export function Tabs({ value, onValueChange, className, children }) {
+export function Tabs({
+  value,
+  defaultValue,
+  onValueChange,
+  className,
+  children,
+}) {
+  const [internalValue, setInternalValue] = useState(defaultValue || "");
+  const isControlled = value !== undefined;
+  const activeTab = isControlled ? value : internalValue;
+
+  const handleValueChange = (nextValue) => {
+    if (!isControlled) {
+      setInternalValue(nextValue);
+    }
+    onValueChange?.(nextValue);
+  };
+
   return (
-    <div className={cn("w-full", className)} data-value={value}>
+    <div className={cn("w-full", className)} data-value={activeTab}>
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
-          ? React.cloneElement(child, { activeTab: value, onValueChange })
+          ? React.cloneElement(child, {
+              activeTab,
+              onValueChange: handleValueChange,
+            })
           : child
       )}
     </div>

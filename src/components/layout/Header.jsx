@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  Bell,
   ChevronRight,
   LogOut,
   Menu,
@@ -17,15 +16,28 @@ import { Button } from "../ui/button";
 
 const ROUTE_TITLES = {
   "/dashboard": "Dashboard Utama",
-  "/users": "Manajemen Users",
-  "/users/roles": "Roles & Module Permissions",
-  "/users/logs": "Activity Logs",
+  "/profile": "Profil & Preferensi",
+  "/master": "Master Data",
+  "/master/patients": "Data Pasien",
+  "/master/doctors": "Dokter & Poli",
+  "/master/schedules": "Jadwal Praktik",
+  "/master/procedures": "Tindakan & Tarif",
+  "/master/medicines": "Obat & Stok",
+  "/outpatient": "Rawat Jalan",
+  "/outpatient/registrations": "Pendaftaran Pasien",
+  "/outpatient/queues": "Antrean Poli",
+  "/outpatient/medical-records": "Rekam Medis",
+  "/outpatient/prescriptions": "Resep & Farmasi",
+  "/outpatient/laboratory": "Laboratorium",
+  "/finance": "Billing & Kasir",
+  "/finance/billings": "Tagihan (Billing)",
+  "/finance/payments": "Pembayaran",
+  "/users": "Manajemen Pengguna",
+  "/users/roles": "Role & Hak Akses",
+  "/users/logs": "Log Aktivitas",
   "/settings": "Pengaturan Sistem",
-  "/settings/appearance": "Appearance & Tema",
-  "/settings/apps": "Konfigurasi Aplikasi",
-  "/settings/integration": "Integrasi API",
-  "/settings/modules": "Manajemen Modul & Menu",
-  "/notification": "Pusat Notifikasi",
+  "/settings/apps": "Sistem & API",
+  "/settings/modules": "Modul & Menu",
 };
 
 export function Header({ onOpenMobileSidebar }) {
@@ -86,12 +98,9 @@ export function Header({ onOpenMobileSidebar }) {
                     {crumb.label}
                   </span>
                 ) : (
-                  <Link
-                    to={crumb.path}
-                    className="hidden sm:inline text-muted-foreground hover:text-foreground transition-colors truncate"
-                  >
+                  <span className="hidden sm:inline text-muted-foreground truncate">
                     {crumb.label}
-                  </Link>
+                  </span>
                 )}
               </React.Fragment>
             );
@@ -99,7 +108,7 @@ export function Header({ onOpenMobileSidebar }) {
         </nav>
       </div>
 
-      {/* Right: Backend Status, Theme Toggle, Notifications, Profile Quick Actions */}
+      {/* Right: Backend Status, Theme Toggle, Profile Quick Actions */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Live Backend Yii2 Connection Indicator */}
         <div
@@ -140,24 +149,12 @@ export function Header({ onOpenMobileSidebar }) {
           )}
         </Button>
 
-        {/* Notifications Shortcut */}
+        {/* Self Profile & Preferences Shortcut (available for all authenticated roles) */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate("/notification")}
-          title="Notifikasi"
-          className="relative"
-        >
-          <Bell className="h-4 w-4 text-muted-foreground" />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
-        </Button>
-
-        {/* Settings Shortcut */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate("/settings/appearance")}
-          title="Pengaturan Profil & Tampilan"
+          onClick={() => navigate("/profile")}
+          title="Profil & Preferensi Tampilan"
         >
           <Settings className="h-4 w-4 text-muted-foreground" />
         </Button>
@@ -167,7 +164,7 @@ export function Header({ onOpenMobileSidebar }) {
         {/* User Profile Pill */}
         <div className="flex items-center gap-2.5">
           <Link
-            to="/settings/appearance"
+            to="/profile"
             className="flex items-center gap-2.5 rounded-full sm:rounded-lg p-1 sm:px-2 sm:py-1 hover:bg-accent transition-colors"
           >
             <Avatar className="h-8 w-8">

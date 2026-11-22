@@ -46,12 +46,11 @@ export const userService = {
 
   /**
    * DELETE /api/users/{id}
-   * Pass force=true for permanent deletion (?force=1), or false for soft delete.
+   * Always performs soft delete (deactivation + audit log preservation).
    */
-  remove(id, force = false) {
+  remove(id) {
     return apiRequest(`/api/users/${id}`, {
       method: "DELETE",
-      params: force ? { force: 1 } : undefined,
     });
   },
 };

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 
 export function DashboardLayout() {
+  const { apiInfo } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -23,12 +25,9 @@ export function DashboardLayout() {
           <Outlet />
         </main>
 
-        <footer className="border-t px-6 py-4 text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>
-            SIMRS Enterprise Frontend — Terintegrasi dengan{" "}
-            <strong className="text-foreground">SIMRS Backend API (Yii2)</strong>
-          </span>
-          <span>RBAC & Stateless JWT Authentication</span>
+        <footer className="border-t px-6 py-3 text-xs text-muted-foreground flex items-center justify-between">
+          <span className="font-medium text-foreground">SIMRS</span>
+          <span>v{apiInfo?.version || "1.0.0"}</span>
         </footer>
       </div>
     </div>

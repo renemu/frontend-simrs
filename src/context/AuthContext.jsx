@@ -163,17 +163,6 @@ export function AuthProvider({ children }) {
     [applySessionPayload]
   );
 
-  const register = useCallback(
-    async (payload) => {
-      const res = await authService.register(payload);
-      if (res?.data) {
-        applySessionPayload(res.data, res.data.token);
-      }
-      return res;
-    },
-    [applySessionPayload]
-  );
-
   const logout = useCallback(async () => {
     try {
       if (getStoredToken()) {
@@ -189,6 +178,10 @@ export function AuthProvider({ children }) {
   const updateProfile = useCallback(
     async (payload) => {
       const res = await authService.updateProfile(payload);
+      if (res?.token) {
+        setStoredToken(res.token);
+        setToken(res.token);
+      }
       if (res?.data) {
         const updatedUser = { ...user, ...res.data };
         setUser(updatedUser);
@@ -204,21 +197,13 @@ export function AuthProvider({ children }) {
   );
 
   /**
-   * Checks whether current user has CRUD permission on a module_code
-   * e.g. hasPermission('users-list', 'create')
+   * Checks whether current user's role explicitly grants a CRUD permission on a module_code.
+   * Mirrors backend Role::checkPermission() strictly (least privilege, no wildcard bypass).
    */
   const hasPermission = useCallback(
     (moduleCode, action = "read") => {
       if (!user) return false;
       if (!moduleCode) return true;
-      const roleName = user?.role?.name || "";
-      if (roleName === "superadmin") {
-        const entry = permissions.find((p) => p.module_code === moduleCode);
-        if (entry && action in entry) {
-          return Boolean(entry[action]);
-        }
-        return true;
-      }
       const found = permissions.find((p) => p.module_code === moduleCode);
       if (!found) return false;
       return Boolean(found[action]);
@@ -238,7 +223,6 @@ export function AuthProvider({ children }) {
       darkMode,
       setDarkMode,
       login,
-      register,
       logout,
       refreshMe,
       updateProfile,
@@ -254,7 +238,6 @@ export function AuthProvider({ children }) {
       apiInfo,
       darkMode,
       login,
-      register,
       logout,
       refreshMe,
       updateProfile,

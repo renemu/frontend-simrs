@@ -60,7 +60,7 @@ const INITIAL_FORM = {
 };
 
 export default function UsersPage() {
-  const { hasPermission } = useAuth();
+  const { user: currentUser, hasPermission } = useAuth();
   const canCreate = hasPermission("users-list", "create");
   const canUpdate = hasPermission("users-list", "update");
   const canDelete = hasPermission("users-list", "delete");
@@ -204,22 +204,25 @@ export default function UsersPage() {
     }
   };
 
-  const handleDeleteUser = async (u, force = false) => {
-    const label = force ? "hapus permanen (hard delete)" : "nonaktifkan (soft delete)";
-    if (!window.confirm(`Apakah Anda yakin ingin ${label} user "${u.email}"?`)) {
+  const handleDeleteUser = async (u) => {
+    if (
+      !window.confirm(
+        `Apakah Anda yakin ingin menonaktifkan (soft delete) user "${u.email}"? Riwayat audit akan tetap dipertahankan.`
+      )
+    ) {
       return;
     }
     try {
-      await userService.remove(u.id, force);
+      await userService.remove(u.id);
       setFeedback({
         type: "success",
-        message: `User ${u.email} berhasil dihapus (${force ? "permanen" : "soft delete"}).`,
+        message: `User ${u.email} berhasil dinonaktifkan (soft delete).`,
       });
       loadUsers(meta.page);
     } catch (err) {
       setFeedback({
         type: "error",
-        message: err?.message || "Gagal menghapus user.",
+        message: err?.message || "Gagal menonaktifkan user.",
       });
     }
   };
@@ -421,18 +424,12 @@ export default function UsersPage() {
                             <Edit3 className="h-4 w-4" />
                           </Button>
                         )}
-                        {canDelete && (
+                        {canDelete && !u.deleted_at && u.id !== currentUser?.id && (
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() =>
-                              handleDeleteUser(u, Boolean(u.deleted_at))
-                            }
-                            title={
-                              u.deleted_at
-                                ? "Hapus Permanen (?force=1)"
-                                : "Soft Delete User"
-                            }
+                            onClick={() => handleDeleteUser(u)}
+                            title="Nonaktifkan (Soft Delete)"
                             className="text-destructive hover:text-destructive"
                           >
                             <Trash2 className="h-4 w-4" />

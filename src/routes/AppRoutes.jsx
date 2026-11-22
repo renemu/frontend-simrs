@@ -3,9 +3,22 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { DashboardLayout } from "../components/layout/DashboardLayout";
 import LoginPage from "../pages/auth/LoginPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
+import BillingsPage from "../pages/finance/BillingsPage";
+import PaymentsPage from "../pages/finance/PaymentsPage";
+import DoctorsPage from "../pages/master/DoctorsPage";
+import MedicinesPage from "../pages/master/MedicinesPage";
+import PatientsPage from "../pages/master/PatientsPage";
+import ProceduresPage from "../pages/master/ProceduresPage";
+import SchedulesPage from "../pages/master/SchedulesPage";
+import LaboratoryPage from "../pages/outpatient/LaboratoryPage";
+import MedicalRecordsPage from "../pages/outpatient/MedicalRecordsPage";
+import PrescriptionsPage from "../pages/outpatient/PrescriptionsPage";
+import QueuesPage from "../pages/outpatient/QueuesPage";
+import RegistrationsPage from "../pages/outpatient/RegistrationsPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import ModulesPage from "../pages/settings/ModulesPage";
 import SettingsPage from "../pages/settings/SettingsPage";
+import ActivityLogsPage from "../pages/users/ActivityLogsPage";
 import RolesPage from "../pages/users/RolesPage";
 import UsersPage from "../pages/users/UsersPage";
 import { ProtectedRoute } from "./ProtectedRoute";
@@ -27,7 +40,7 @@ export function AppRoutes() {
         }
       />
 
-      {/* Protected Dashboard & Module Routes matching backend-yii2 modules table */}
+      {/* Protected Dashboard & SIMRS Module Routes matching backend-yii2 modules table */}
       <Route
         element={
           <ProtectedRoute>
@@ -44,7 +57,112 @@ export function AppRoutes() {
           }
         />
 
-        {/* Users Management Group */}
+        {/* Self-service Profile & UI Preferences (accessible to all authenticated roles) */}
+        <Route path="/profile" element={<SettingsPage />} />
+
+        {/* Master Data Group (FR-01 — Batch 2 Implemented) */}
+        <Route
+          path="/master/patients"
+          element={
+            <ProtectedRoute moduleCode="master-patients">
+              <PatientsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/master/doctors"
+          element={
+            <ProtectedRoute moduleCode="master-doctors">
+              <DoctorsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/master/schedules"
+          element={
+            <ProtectedRoute moduleCode="master-schedules">
+              <SchedulesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/master/procedures"
+          element={
+            <ProtectedRoute moduleCode="master-procedures">
+              <ProceduresPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/master/medicines"
+          element={
+            <ProtectedRoute moduleCode="master-medicines">
+              <MedicinesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Outpatient Clinical Flow Group (FR-02 to FR-06 — Batch 3 Implemented) */}
+        <Route
+          path="/outpatient/registrations"
+          element={
+            <ProtectedRoute moduleCode="registrations">
+              <RegistrationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/outpatient/queues"
+          element={
+            <ProtectedRoute moduleCode="queues">
+              <QueuesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/outpatient/medical-records"
+          element={
+            <ProtectedRoute moduleCode="medical-records">
+              <MedicalRecordsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/outpatient/prescriptions"
+          element={
+            <ProtectedRoute moduleCode="prescriptions">
+              <PrescriptionsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/outpatient/laboratory"
+          element={
+            <ProtectedRoute moduleCode="laboratory">
+              <LaboratoryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Finance Group (FR-07 — Batch 4 Implemented) */}
+        <Route
+          path="/finance/billings"
+          element={
+            <ProtectedRoute moduleCode="billings">
+              <BillingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/finance/payments"
+          element={
+            <ProtectedRoute moduleCode="payments">
+              <PaymentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Users Management Group (FR-09) */}
         <Route
           path="/users"
           element={
@@ -65,7 +183,7 @@ export function AppRoutes() {
           path="/users/logs"
           element={
             <ProtectedRoute moduleCode="users-logs">
-              <SettingsPage />
+              <ActivityLogsPage />
             </ProtectedRoute>
           }
         />
@@ -74,15 +192,7 @@ export function AppRoutes() {
         <Route
           path="/settings"
           element={
-            <ProtectedRoute moduleCode="settings">
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/settings/appearance"
-          element={
-            <ProtectedRoute moduleCode="settings-appearance">
+            <ProtectedRoute moduleCode="settings-apps">
               <SettingsPage />
             </ProtectedRoute>
           }
@@ -96,28 +206,10 @@ export function AppRoutes() {
           }
         />
         <Route
-          path="/settings/integration"
-          element={
-            <ProtectedRoute moduleCode="settings-integration">
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/settings/modules"
           element={
             <ProtectedRoute moduleCode="settings-modules">
               <ModulesPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Notification Route */}
-        <Route
-          path="/notification"
-          element={
-            <ProtectedRoute moduleCode="notification">
-              <SettingsPage />
             </ProtectedRoute>
           }
         />

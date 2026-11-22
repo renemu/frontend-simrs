@@ -44,6 +44,15 @@ import { useAuth } from "../../context/AuthContext";
 import { moduleService } from "../../services/module.service";
 import { roleService } from "../../services/role.service";
 
+const CORE_ROLE_NAMES = [
+  "admin",
+  "registration",
+  "doctor",
+  "pharmacy",
+  "laboratory",
+  "cashier",
+];
+
 export default function RolesPage() {
   const { hasPermission, refreshMe } = useAuth();
   const canCreate = hasPermission("users-roles", "create");
@@ -373,16 +382,18 @@ export default function RolesPage() {
                             <Edit3 className="h-3.5 w-3.5" />
                           </Button>
                         )}
-                        {canDelete && r.name !== "superadmin" && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-destructive"
-                            onClick={() => handleDeleteRole(r)}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
+                        {canDelete &&
+                          !r.is_core &&
+                          !CORE_ROLE_NAMES.includes(r.name) && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-destructive"
+                              onClick={() => handleDeleteRole(r)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          )}
                       </div>
                     </div>
 
@@ -524,6 +535,10 @@ export default function RolesPage() {
                 <Input
                   id="r-name"
                   required
+                  disabled={
+                    Boolean(editingRole?.is_core) ||
+                    CORE_ROLE_NAMES.includes(editingRole?.name || "")
+                  }
                   placeholder="contoh: doctor, nurse, pharmacist"
                   value={roleForm.name}
                   onChange={(e) =>

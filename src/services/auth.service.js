@@ -4,7 +4,6 @@ import { apiRequest } from "./api";
  * Auth & Health Service integrated with backend-yii2:
  * - GET /
  * - POST /api/auth/login
- * - POST /api/auth/register
  * - GET /api/auth/me
  * - GET /api/auth/permissions
  * - PUT /api/auth/profile
@@ -25,17 +24,6 @@ export const authService = {
     return apiRequest("/api/auth/login", {
       method: "POST",
       body: { email, password, rememberMe },
-      skipAuth: true,
-    });
-  },
-
-  /**
-   * POST /api/auth/register
-   */
-  register(payload) {
-    return apiRequest("/api/auth/register", {
-      method: "POST",
-      body: payload,
       skipAuth: true,
     });
   },

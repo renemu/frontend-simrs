@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-// Fallback menu tree if backend menus array is empty
+// Minimal fallback menu if backend menus array is empty
 const DEFAULT_MENUS = [
   {
     id: 1,
@@ -25,98 +25,6 @@ const DEFAULT_MENUS = [
     code: "dashboard",
     icon: "LayoutDashboardIcon",
     path: "/dashboard",
-    permissions: { read: true },
-    children: [],
-  },
-  {
-    id: 4,
-    name: "Users",
-    code: "users",
-    icon: "UsersIcon",
-    path: null,
-    permissions: { read: true },
-    children: [
-      {
-        id: 5,
-        name: "Users",
-        code: "users-list",
-        icon: "UserIcon",
-        path: "/users",
-        permissions: { read: true },
-        children: [],
-      },
-      {
-        id: 6,
-        name: "Roles",
-        code: "users-roles",
-        icon: "ShieldIcon",
-        path: "/users/roles",
-        permissions: { read: true },
-        children: [],
-      },
-      {
-        id: 13,
-        name: "Activity logs",
-        code: "users-logs",
-        icon: "FileTextIcon",
-        path: "/users/logs",
-        permissions: { read: true },
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Settings",
-    code: "settings",
-    icon: "SettingsIcon",
-    path: "/settings",
-    permissions: { read: true },
-    children: [
-      {
-        id: 10,
-        name: "Appearance",
-        code: "settings-appearance",
-        icon: "PaletteIcon",
-        path: "/settings/appearance",
-        permissions: { read: true },
-        children: [],
-      },
-      {
-        id: 9,
-        name: "System",
-        code: "settings-apps",
-        icon: "AppWindowIcon",
-        path: "/settings/apps",
-        permissions: { read: true },
-        children: [],
-      },
-      {
-        id: 11,
-        name: "Integration",
-        code: "settings-integration",
-        icon: "PlugIcon",
-        path: "/settings/integration",
-        permissions: { read: true },
-        children: [],
-      },
-      {
-        id: 12,
-        name: "Modules",
-        code: "settings-modules",
-        icon: "ListTreeIcon",
-        path: "/settings/modules",
-        permissions: { read: true },
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 7,
-    name: "Notification",
-    code: "notification",
-    icon: "BellIcon",
-    path: "/notification",
     permissions: { read: true },
     children: [],
   },
