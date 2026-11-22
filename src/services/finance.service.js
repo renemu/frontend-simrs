@@ -1,8 +1,12 @@
 import { apiRequest } from "./api";
 
-export const NODE_API_BASE_URL = (
-  process.env.REACT_APP_NODE_API_URL || "http://localhost:3001"
-).replace(/\/+$/, "");
+const rawNodeApiUrl = process.env.REACT_APP_NODE_API_URL;
+export const NODE_API_BASE_URL =
+  rawNodeApiUrl === undefined
+    ? "http://localhost:3001"
+    : rawNodeApiUrl === "/" || rawNodeApiUrl.trim() === ""
+    ? ""
+    : rawNodeApiUrl.replace(/\/+$/, "");
 
 export const billingService = {
   list(params = {}) {

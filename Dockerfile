@@ -9,8 +9,8 @@ COPY public ./public
 COPY src ./src
 COPY tailwind.config.js postcss.config.js components.json ./
 
-ARG REACT_APP_API_URL=http://localhost:8080
-ARG REACT_APP_NODE_API_URL=http://localhost:3001
+ARG REACT_APP_API_URL=/
+ARG REACT_APP_NODE_API_URL=/
 ENV REACT_APP_API_URL=$REACT_APP_API_URL \
     REACT_APP_NODE_API_URL=$REACT_APP_NODE_API_URL \
     GENERATE_SOURCEMAP=false

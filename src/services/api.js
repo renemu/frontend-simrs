@@ -1,9 +1,13 @@
 const STORAGE_TOKEN_KEY = "simrs_jwt_token";
 const STORAGE_USER_KEY = "simrs_auth_user";
 
-export const API_BASE_URL = (
-  process.env.REACT_APP_API_URL || "http://localhost:8080"
-).replace(/\/+$/, "");
+const rawApiUrl = process.env.REACT_APP_API_URL;
+export const API_BASE_URL =
+  rawApiUrl === undefined
+    ? "http://localhost:8080"
+    : rawApiUrl === "/" || rawApiUrl.trim() === ""
+    ? ""
+    : rawApiUrl.replace(/\/+$/, "");
 
 export function getStoredToken() {
   return localStorage.getItem(STORAGE_TOKEN_KEY);
@@ -110,7 +114,7 @@ export async function apiRequest(endpoint, options = {}) {
     });
   } catch (networkErr) {
     throw new ApiError(
-      `Tidak dapat terhubung ke server Backend Yii2 (${API_BASE_URL}). Pastikan server berjalan di port 8080.`,
+      "Tidak dapat terhubung ke server aplikasi. Silakan periksa koneksi Anda atau coba lagi.",
       0,
       null,
       networkErr

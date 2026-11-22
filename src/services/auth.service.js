@@ -14,7 +14,7 @@ export const authService = {
    * GET / — Checks Backend Yii2 API health & application metadata (.env)
    */
   getHealthStatus() {
-    return apiRequest("/", { method: "GET", skipAuth: true });
+    return apiRequest("/api/health", { method: "GET", skipAuth: true });
   },
 
   /**
