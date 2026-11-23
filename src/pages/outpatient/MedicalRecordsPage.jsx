@@ -325,7 +325,9 @@ export default function MedicalRecordsPage() {
     }
   };
 
-  const labProcedures = proceduresMaster.filter((p) => p.category === "laboratory");
+  const labProcedures = proceduresMaster.filter(
+    (p) => p.category === "laboratory" || p.category === "diagnostic"
+  );
 
   return (
     <div className="space-y-6">
@@ -1010,12 +1012,22 @@ export default function MedicalRecordsPage() {
                         ) : (
                           (visitDetail.lab_orders || []).map((lo) => (
                             <div key={lo.id} className="rounded-xl border p-3.5 space-y-2">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <span className="font-mono text-xs text-muted-foreground mr-2">
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <span className="font-mono text-xs text-muted-foreground">
                                     {lo.order_number}
                                   </span>
                                   <strong className="text-sm">{lo.test_name}</strong>
+                                  {lo.modality_label && (
+                                    <Badge variant="outline" className="text-[10px]">
+                                      {lo.modality_label}
+                                    </Badge>
+                                  )}
+                                  {lo.integration_status && lo.integration_status !== "local_only" && (
+                                    <Badge variant="secondary" className="text-[10px]">
+                                      {lo.integration_status}
+                                    </Badge>
+                                  )}
                                 </div>
                                 <Badge
                                   variant={
@@ -1028,9 +1040,15 @@ export default function MedicalRecordsPage() {
                               {lo.result ? (
                                 <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-2.5 text-xs">
                                   <div className="font-semibold text-emerald-700 dark:text-emerald-400">
-                                    Hasil Laboratorium:
+                                    Hasil {lo.modality_label || "Laboratorium"}:
                                   </div>
                                   <p className="mt-0.5">{lo.result.result_summary}</p>
+                                  {lo.result.modality_device && (
+                                    <p className="text-muted-foreground mt-1">
+                                      Perangkat: {lo.result.modality_device}
+                                      {lo.external_reference_id ? ` • Ref: ${lo.external_reference_id}` : ""}
+                                    </p>
+                                  )}
                                   {lo.result.reference_notes && (
                                     <p className="text-muted-foreground mt-1">
                                       Catatan: {lo.result.reference_notes}

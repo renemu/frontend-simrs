@@ -1,4 +1,5 @@
 import { apiRequest } from "./api";
+import { NODE_API_BASE_URL } from "./finance.service";
 
 export const visitService = {
   list(params = {}) {
@@ -98,6 +99,56 @@ export const labOrderService = {
     return apiRequest(`/api/lab-orders/${id}/result`, {
       method: "POST",
       body: payload,
+    });
+  },
+};
+
+/**
+ * Node.js External Modality & Laboratory Integration Gateway service (CT-Scan, X-Ray, MRI, USG, EKG, LIS).
+ */
+export const labGatewayService = {
+  listModalities() {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/modalities`, {
+      method: "GET",
+    });
+  },
+  checkModalityHealth(modality, params = {}) {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/modalities/${modality}/health`, {
+      method: "GET",
+      params,
+    });
+  },
+  dispatchOrder(orderId, payload = {}, params = {}) {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/lab/orders/${orderId}/dispatch`, {
+      method: "POST",
+      body: payload,
+      params,
+    });
+  },
+  dispatchCtScan(orderId, payload = {}, params = {}) {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/lab/orders/${orderId}/ct-scan/dispatch`, {
+      method: "POST",
+      body: payload,
+      params,
+    });
+  },
+  syncCtScanResult(orderId, payload = {}, params = {}) {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/lab/orders/${orderId}/ct-scan/sync-result`, {
+      method: "POST",
+      body: payload,
+      params,
+    });
+  },
+  syncExternalResult(orderId, payload = {}, params = {}) {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/lab/orders/${orderId}/sync-external-result`, {
+      method: "POST",
+      body: payload,
+      params,
+    });
+  },
+  getExternalStatus(orderId) {
+    return apiRequest(`${NODE_API_BASE_URL}/node-api/lab/orders/${orderId}/external-status`, {
+      method: "GET",
     });
   },
 };
