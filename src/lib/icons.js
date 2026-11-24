@@ -2,6 +2,7 @@ import React from "react";
 import {
   Activity,
   AppWindow,
+  BarChart3,
   Bell,
   Building2,
   CalendarClock,
@@ -9,6 +10,7 @@ import {
   ClipboardPlus,
   CreditCard,
   Database,
+  FileBarChart2,
   FileHeart,
   FileSpreadsheet,
   FileText,
@@ -74,6 +76,10 @@ const ICON_MAP = {
   ReceiptIcon: Receipt,
   FileSpreadsheetIcon: FileSpreadsheet,
   CreditCardIcon: CreditCard,
+  BarChart3Icon: BarChart3,
+  BarChart3: BarChart3,
+  FileBarChartIcon: FileBarChart2,
+  FileBarChart2: FileBarChart2,
 };
 
 export function DynamicIcon({ name, className = "h-4 w-4", ...props }) {

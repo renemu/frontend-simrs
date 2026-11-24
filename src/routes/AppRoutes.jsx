@@ -15,6 +15,7 @@ import MedicalRecordsPage from "../pages/outpatient/MedicalRecordsPage";
 import PrescriptionsPage from "../pages/outpatient/PrescriptionsPage";
 import QueuesPage from "../pages/outpatient/QueuesPage";
 import RegistrationsPage from "../pages/outpatient/RegistrationsPage";
+import ReportsPage from "../pages/reports/ReportsPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import ModulesPage from "../pages/settings/ModulesPage";
 import SettingsPage from "../pages/settings/SettingsPage";
@@ -158,6 +159,16 @@ export function AppRoutes() {
           element={
             <ProtectedRoute moduleCode="payments">
               <PaymentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* SIMRS Standard Reports Module (FR-08) */}
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute moduleCode="reports">
+              <ReportsPage />
             </ProtectedRoute>
           }
         />

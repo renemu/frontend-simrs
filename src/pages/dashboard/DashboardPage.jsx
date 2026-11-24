@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Activity,
   AlertCircle,
+  BarChart3,
   ClipboardList,
   CreditCard,
   FlaskConical,
@@ -39,7 +41,9 @@ import {
 import { dashboardService } from "../../services/finance.service";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, hasPermission } = useAuth();
+  const canReadReports = hasPermission("reports", "read");
   const [fromDate, setFromDate] = useState(() => getLocalFirstOfMonthDate());
   const [toDate, setToDate] = useState(() => getLocalTodayDate());
   const [metrics, setMetrics] = useState(null);
@@ -110,6 +114,11 @@ export default function DashboardPage() {
           <Button variant="outline" size="sm" onClick={loadMetrics}>
             <RefreshCw className="h-4 w-4" /> Refresh
           </Button>
+          {canReadReports && (
+            <Button size="sm" onClick={() => navigate("/reports")}>
+              <BarChart3 className="h-4 w-4" /> Laporan SIMRS
+            </Button>
+          )}
         </div>
       </div>
 
